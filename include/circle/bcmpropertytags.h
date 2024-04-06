@@ -42,6 +42,13 @@
 #define PROPTAG_GET_MIN_CLOCK_RATE	0x00030007
 #define PROPTAG_GET_TURBO		0x00030009
 #define PROPTAG_GET_MAX_TEMPERATURE	0x0003000A
+#define PROPTAG_ALLOCATE_MEMORY		0x0003000C
+#define PROPTAG_LOCK_MEMORY		0x0003000D
+#define PROPTAG_UNLOCK_MEMORY		0x0003000E
+#define PROPTAG_RELEASE_MEMORY		0x0003000F
+#define PROPTAG_EXECUTE_CODE		0x00030010
+#define PROPTAG_LAUNCH_VPU1		0x00030013
+#define PROPTAG_GET_DISPMANX_MEM_HANDLE	0x00030014
 #define PROPTAG_GET_EDID_BLOCK		0x00030020
 #define PROPTAG_GET_THROTTLED		0x00030046
 #define PROPTAG_GET_CLOCK_RATE_MEASURED	0x00030047
@@ -229,6 +236,19 @@ struct TPropertyTagEDIDBlock
 }
 PACKED;
 
+struct TPropertyTagLaunchVPU1
+{
+	TPropertyTag	Tag;
+	u32		nVpuFuncPtr;
+	u32		nArgR0;
+	u32		nArgR1;
+	u32		nArgR2;
+	u32		nArgR3;
+	u32		nArgR4;
+	u32		nArgR5;
+}
+PACKED;
+
 struct TPropertyTagSetClockRate
 {
 	TPropertyTag	Tag;
@@ -304,6 +324,11 @@ public:
 	boolean GetTags (void	 *pTags,			// pointer to tags struct
 			 unsigned nTagsSize);			// size of tags struct
 
+	boolean GetTagNoCheck (u32 nTagId,			// tag identifier
+			void	 *pTag,				// pointer to tag struct
+			unsigned  nTagSize,			// size of tag struct
+			unsigned  nRequestParmSize = 0);	// number of parameter bytes
+	
 private:
 	CBcmMailBox m_MailBox;
 };

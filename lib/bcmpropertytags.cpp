@@ -106,3 +106,45 @@ boolean CBcmPropertyTags::GetTags (void *pTags, unsigned nTagsSize)
 
 	return TRUE;
 }
+
+boolean CBcmPropertyTags::GetTagNoCheck (u32 nTagId, void *pTag, unsigned nTagSize, unsigned nRequestParmSize)
+{
+	assert (pTag != 0);
+	assert (nTagSize >= sizeof (TPropertyTagSimple));
+
+	TPropertyTag *pHeader = (TPropertyTag *) pTag;
+	pHeader->nTagId = nTagId;
+	pHeader->nValueBufSize = nTagSize - sizeof (TPropertyTag);
+	pHeader->nValueLength = nRequestParmSize & ~VALUE_LENGTH_RESPONSE;
+
+	void *pTags = pTag;
+	unsigned nTagsSize = nTagSize;
+
+	assert (pTags != 0);
+	assert (nTagsSize >= sizeof (TPropertyTagSimple));
+	unsigned nBufferSize = sizeof (TPropertyBuffer) + nTagsSize + sizeof (u32);
+	assert ((nBufferSize & 3) == 0);
+
+	TPropertyBuffer *pBuffer =
+		(TPropertyBuffer *) CMemorySystem::GetCoherentPage (COHERENT_SLOT_PROP_MAILBOX);
+
+	pBuffer->nBufferSize = nBufferSize;
+	pBuffer->nCode = CODE_REQUEST;
+	memcpy (pBuffer->Tags, pTags, nTagsSize);
+
+	u32 *pEndTag = (u32 *) (pBuffer->Tags + nTagsSize);
+	*pEndTag = PROPTAG_END;
+
+	DataSyncBarrier ();
+
+	u32 nBufferAddress = BUS_ADDRESS ((uintptr) pBuffer);
+	m_MailBox.Write (nBufferAddress);
+
+	DataMemBarrier ();
+
+	memcpy (pTags, pBuffer->Tags, nTagsSize);
+
+	pHeader->nValueLength &= ~VALUE_LENGTH_RESPONSE;
+	return TRUE;
+}
+
