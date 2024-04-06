@@ -1,0 +1,3 @@
+./makeall clean
+./makeall
+
