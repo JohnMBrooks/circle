@@ -155,7 +155,7 @@
 // single core applications, because this may slow down the system
 // because multiple cores may compete for bus time without use.
 
-//#define ARM_ALLOW_MULTI_CORE
+#define ARM_ALLOW_MULTI_CORE
 
 #endif
 
@@ -173,7 +173,7 @@
 
 #endif
 
-#if RASPPI == 4
+#if RASPPI >= 4
 
 // USE_XHCI_INTERNAL enables the xHCI controller, which is integrated
 // into the BCM2711 SoC. The Raspberry Pi 4 provides two independent
@@ -201,7 +201,7 @@
 // by disabling some features (e.g. USB low-/full-speed device support).
 // See doc/realtime.txt for details!
 
-//#define REALTIME
+#define REALTIME
 
 // USE_USB_SOF_INTR improves the compatibility with low-/full-speed
 // USB devices. If your application uses such devices, this option
@@ -287,13 +287,12 @@
 
 #ifndef DEFAULT_KEYMAP
 
-#define DEFAULT_KEYMAP		"DE"
-//#define DEFAULT_KEYMAP		"DV"	// Dvorak layout
+//#define DEFAULT_KEYMAP		"DE"
 //#define DEFAULT_KEYMAP		"ES"
 //#define DEFAULT_KEYMAP		"FR"
 //#define DEFAULT_KEYMAP		"IT"
 //#define DEFAULT_KEYMAP		"UK"
-//#define DEFAULT_KEYMAP		"US"
+#define DEFAULT_KEYMAP		"US"
 
 #endif
 

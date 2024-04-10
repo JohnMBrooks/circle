@@ -3,7 +3,8 @@
 
 PREFIX ?= arm-none-eabi-
 PREFIX64 ?= aarch64-none-elf-
-FLASHBAUD ?= 115200
+#FLASHBAUD ?= 115200
+FLASHBAUD ?= 1500000
 
 ARMGNU ?= $(PREFIX)
 ARMGNU64 ?= $(PREFIX64)

@@ -33,7 +33,6 @@ public:
 
 	u32 WriteRead (unsigned nData);
 
-private:
 	void Flush (void);
 
 	u32 Read (void);
